@@ -1,0 +1,1958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Sleep Cocoa by LunaSol — Wake Up Rested, Not Wrecked</title>
+    <meta name="description" content="A melatonin-free nightly cocoa ritual with Magnesium Glycinate, L-Theanine, and Reishi Mushroom. Fall asleep, stay asleep, wake up clear. 30-night money-back guarantee.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        /* ========================================
+           CSS VARIABLES
+           ======================================== */
+        :root {
+            --night: #080c1a;
+            --night-deep: #050816;
+            --night-mid: #0f1535;
+            --night-soft: #1a2240;
+            --cocoa: #6b4226;
+            --cocoa-light: #8b5e3c;
+            --cocoa-warm: #a0714e;
+            --gold: #d4a853;
+            --gold-soft: #e8c882;
+            --gold-pale: #f0ddb0;
+            --cream: #f5f0e8;
+            --cream-soft: #faf7f2;
+            --moon: #c8d0e8;
+            --moon-soft: #9aa4c4;
+            --text-primary: #e8e4dc;
+            --text-secondary: #b0a898;
+            --text-muted: #7a7268;
+            --star: #f0c040;
+
+            --font-display: 'Cormorant Garamond', Georgia, serif;
+            --font-body: 'DM Sans', -apple-system, sans-serif;
+
+            --section-pad: clamp(80px, 10vw, 140px);
+            --content-width: 720px;
+            --wide-width: 960px;
+        }
+
+        /* ========================================
+           RESET & BASE
+           ======================================== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: 17px;
+            line-height: 1.7;
+            color: var(--text-primary);
+            background: var(--night);
+            overflow-x: hidden;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* ========================================
+           TEXTURE & ATMOSPHERE
+           ======================================== */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 50% at 20% 20%, rgba(107, 66, 38, 0.08) 0%, transparent 70%),
+                radial-gradient(ellipse 60% 40% at 80% 60%, rgba(212, 168, 83, 0.05) 0%, transparent 70%),
+                radial-gradient(ellipse 100% 80% at 50% 100%, rgba(107, 66, 38, 0.06) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .grain-overlay {
+            position: fixed;
+            inset: 0;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* ========================================
+           STARS BACKGROUND
+           ======================================== */
+        .stars {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star-dot {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(200, 208, 232, 0.4);
+            border-radius: 50%;
+            animation: twinkle 4s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.8; }
+        }
+
+        /* ========================================
+           LAYOUT UTILITIES
+           ======================================== */
+        .container {
+            width: 100%;
+            max-width: var(--content-width);
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .container--wide {
+            max-width: var(--wide-width);
+        }
+
+        .container--full {
+            max-width: 1100px;
+        }
+
+        section {
+            padding: var(--section-pad) 0;
+            position: relative;
+        }
+
+        /* ========================================
+           TYPOGRAPHY
+           ======================================== */
+        h1, h2, h3, h4 {
+            font-family: var(--font-display);
+            font-weight: 500;
+            line-height: 1.15;
+            color: var(--cream);
+        }
+
+        h1 {
+            font-size: clamp(2.8rem, 5.5vw, 4.2rem);
+            letter-spacing: -0.02em;
+        }
+
+        h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            letter-spacing: -0.01em;
+        }
+
+        h3 {
+            font-size: clamp(1.5rem, 2.5vw, 2rem);
+        }
+
+        h4 {
+            font-size: 1.3rem;
+        }
+
+        p {
+            margin-bottom: 1.4em;
+            color: var(--text-primary);
+        }
+
+        .text-secondary {
+            color: var(--text-secondary);
+        }
+
+        .text-gold {
+            color: var(--gold);
+        }
+
+        .text-cream {
+            color: var(--cream);
+        }
+
+        .eyebrow {
+            font-family: var(--font-body);
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .section-divider {
+            width: 48px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            margin: 0 auto 40px;
+        }
+
+        /* ========================================
+           BUTTONS
+           ======================================== */
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 18px 44px;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--cocoa-warm) 100%);
+            color: var(--night);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            border: none;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            box-shadow:
+                0 4px 24px rgba(212, 168, 83, 0.25),
+                0 0 0 0 rgba(212, 168, 83, 0);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--gold-soft) 0%, var(--gold) 100%);
+            opacity: 0;
+            transition: opacity 0.35s ease;
+            border-radius: inherit;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                0 8px 36px rgba(212, 168, 83, 0.35),
+                0 0 0 3px rgba(212, 168, 83, 0.15);
+        }
+
+        .btn-primary:hover::before {
+            opacity: 1;
+        }
+
+        .btn-primary span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 36px;
+            background: transparent;
+            color: var(--gold);
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            font-weight: 600;
+            border: 1px solid rgba(212, 168, 83, 0.35);
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--gold);
+            background: rgba(212, 168, 83, 0.08);
+        }
+
+        /* ========================================
+           HERO SECTION
+           ======================================== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 60px;
+            padding-bottom: 60px;
+            position: relative;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 200px;
+            background: linear-gradient(to top, var(--night), transparent);
+            pointer-events: none;
+        }
+
+        .hero .container {
+            text-align: center;
+        }
+
+        .hero__badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            background: rgba(212, 168, 83, 0.1);
+            border: 1px solid rgba(212, 168, 83, 0.2);
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--gold);
+            margin-bottom: 40px;
+            animation: fadeInDown 0.8s ease both;
+        }
+
+        .hero__badge svg {
+            width: 14px;
+            height: 14px;
+            fill: var(--gold);
+        }
+
+        .hero h1 {
+            max-width: 680px;
+            margin: 0 auto 28px;
+            animation: fadeInUp 0.8s 0.15s ease both;
+        }
+
+        .hero h1 em {
+            font-style: italic;
+            color: var(--gold);
+        }
+
+        .hero__sub {
+            max-width: 540px;
+            margin: 0 auto 48px;
+            font-size: 1.1rem;
+            line-height: 1.75;
+            color: var(--text-secondary);
+            animation: fadeInUp 0.8s 0.3s ease both;
+        }
+
+        .hero__cta-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            animation: fadeInUp 0.8s 0.45s ease both;
+        }
+
+        .hero__price {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .hero__price s {
+            opacity: 0.6;
+        }
+
+        .hero__trust {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 28px;
+            margin-top: 56px;
+            animation: fadeInUp 0.8s 0.6s ease both;
+        }
+
+        .hero__trust-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            letter-spacing: 0.02em;
+        }
+
+        .hero__trust-item svg {
+            width: 16px;
+            height: 16px;
+            opacity: 0.6;
+        }
+
+        .hero__stars {
+            display: flex;
+            gap: 2px;
+        }
+
+        .hero__stars svg {
+            width: 14px;
+            height: 14px;
+            fill: var(--star);
+            opacity: 1;
+        }
+
+        /* ========================================
+           SOCIAL PROOF BAR
+           ======================================== */
+        .proof-bar {
+            padding: 36px 0;
+            border-top: 1px solid rgba(212, 168, 83, 0.08);
+            border-bottom: 1px solid rgba(212, 168, 83, 0.08);
+            background: rgba(15, 21, 53, 0.5);
+        }
+
+        .proof-bar__inner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+
+        .proof-bar__stat {
+            text-align: center;
+        }
+
+        .proof-bar__number {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--gold);
+            line-height: 1.2;
+        }
+
+        .proof-bar__label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        .proof-bar__divider {
+            width: 1px;
+            height: 40px;
+            background: rgba(212, 168, 83, 0.15);
+        }
+
+        /* ========================================
+           PROBLEM SECTION
+           ======================================== */
+        .problem {
+            background: linear-gradient(180deg, var(--night) 0%, var(--night-deep) 100%);
+        }
+
+        .problem__lead {
+            font-family: var(--font-display);
+            font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+            font-weight: 400;
+            font-style: italic;
+            color: var(--cream);
+            line-height: 1.5;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .problem p {
+            font-size: 1.05rem;
+        }
+
+        .problem__callout {
+            margin: 48px 0;
+            padding: 32px 36px;
+            border-left: 2px solid var(--gold);
+            background: rgba(212, 168, 83, 0.04);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .problem__callout p {
+            font-style: italic;
+            color: var(--cream);
+            margin-bottom: 0;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .problem__closing {
+            font-size: 1.1rem;
+            color: var(--cream);
+            font-weight: 500;
+            text-align: center;
+            margin-top: 48px;
+            margin-bottom: 0;
+        }
+
+        /* ========================================
+           FAILED SOLUTIONS
+           ======================================== */
+        .failed {
+            background: var(--night-deep);
+        }
+
+        .failed__grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-top: 48px;
+        }
+
+        .failed__card {
+            padding: 32px;
+            background: rgba(26, 34, 64, 0.5);
+            border: 1px solid rgba(200, 208, 232, 0.06);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .failed__card:hover {
+            border-color: rgba(200, 208, 232, 0.12);
+            background: rgba(26, 34, 64, 0.7);
+        }
+
+        .failed__card-icon {
+            font-size: 1.6rem;
+            margin-bottom: 16px;
+            opacity: 0.7;
+        }
+
+        .failed__card h4 {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            color: var(--cream);
+            margin-bottom: 12px;
+        }
+
+        .failed__card p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 0;
+            line-height: 1.7;
+        }
+
+        .failed__card .verdict {
+            display: inline-block;
+            margin-top: 14px;
+            padding: 4px 12px;
+            background: rgba(180, 60, 60, 0.12);
+            color: #d48a8a;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            border-radius: 4px;
+        }
+
+        /* ========================================
+           SOLUTION INTRO
+           ======================================== */
+        .solution-intro {
+            background: linear-gradient(180deg, var(--night-deep) 0%, var(--night) 50%, var(--night-mid) 100%);
+            text-align: center;
+        }
+
+        .solution-intro h2 {
+            max-width: 600px;
+            margin: 0 auto 32px;
+        }
+
+        .solution-intro h2 em {
+            font-style: italic;
+            color: var(--gold);
+        }
+
+        .solution-intro__body {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .solution-intro__body p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .solution-intro__pills {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 40px;
+        }
+
+        .solution-intro__pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: rgba(212, 168, 83, 0.08);
+            border: 1px solid rgba(212, 168, 83, 0.15);
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--gold-soft);
+        }
+
+        .solution-intro__pill svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--gold);
+        }
+
+        /* ========================================
+           HOW IT WORKS (INGREDIENTS)
+           ======================================== */
+        .how-it-works {
+            background: var(--night-mid);
+        }
+
+        .ingredients-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+            margin-top: 56px;
+        }
+
+        .ingredient-card {
+            padding: 36px 28px;
+            background: linear-gradient(160deg, rgba(26, 34, 64, 0.6) 0%, rgba(15, 21, 53, 0.8) 100%);
+            border: 1px solid rgba(212, 168, 83, 0.1);
+            border-radius: 16px;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ingredient-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .ingredient-card:hover::before {
+            opacity: 1;
+        }
+
+        .ingredient-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(212, 168, 83, 0.2);
+        }
+
+        .ingredient-card__step {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(212, 168, 83, 0.1);
+            color: var(--gold);
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .ingredient-card h3 {
+            font-size: 1.35rem;
+            margin-bottom: 8px;
+        }
+
+        .ingredient-card__compound {
+            font-size: 0.8rem;
+            color: var(--gold);
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .ingredient-card p {
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 0;
+        }
+
+        /* ========================================
+           THE RITUAL SECTION
+           ======================================== */
+        .ritual {
+            background: linear-gradient(180deg, var(--night-mid) 0%, var(--night) 100%);
+        }
+
+        .ritual__content {
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        .ritual__steps {
+            margin: 48px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .ritual__step {
+            display: flex;
+            gap: 24px;
+            padding: 24px 0;
+            position: relative;
+        }
+
+        .ritual__step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 19px;
+            top: 56px;
+            bottom: 0;
+            width: 1px;
+            background: rgba(212, 168, 83, 0.15);
+        }
+
+        .ritual__step-num {
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 1px solid rgba(212, 168, 83, 0.25);
+            color: var(--gold);
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .ritual__step-text {
+            padding-top: 6px;
+        }
+
+        .ritual__step-text h4 {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            color: var(--cream);
+            margin-bottom: 6px;
+        }
+
+        .ritual__step-text p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 0;
+        }
+
+        .ritual__sensory {
+            margin-top: 48px;
+            padding: 36px;
+            background: linear-gradient(135deg, rgba(107, 66, 38, 0.12) 0%, rgba(212, 168, 83, 0.06) 100%);
+            border: 1px solid rgba(107, 66, 38, 0.2);
+            border-radius: 16px;
+        }
+
+        .ritual__sensory p {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-style: italic;
+            line-height: 1.7;
+            color: var(--cream);
+            margin-bottom: 0;
+        }
+
+        /* ========================================
+           TESTIMONIALS
+           ======================================== */
+        .testimonials {
+            background: var(--night);
+        }
+
+        .testimonials__grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 56px;
+        }
+
+        .testimonial-card {
+            padding: 32px;
+            background: linear-gradient(160deg, rgba(26, 34, 64, 0.4) 0%, rgba(15, 21, 53, 0.6) 100%);
+            border: 1px solid rgba(200, 208, 232, 0.06);
+            border-radius: 14px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .testimonial-card__stars {
+            display: flex;
+            gap: 3px;
+            margin-bottom: 20px;
+        }
+
+        .testimonial-card__stars svg {
+            width: 15px;
+            height: 15px;
+            fill: var(--star);
+        }
+
+        .testimonial-card__quote {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-style: italic;
+            line-height: 1.6;
+            color: var(--cream);
+            flex: 1;
+            margin-bottom: 24px;
+        }
+
+        .testimonial-card__author {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-top: 1px solid rgba(200, 208, 232, 0.06);
+            padding-top: 16px;
+        }
+
+        .testimonial-card__name {
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        /* ========================================
+           COMPARISON TABLE
+           ======================================== */
+        .comparison {
+            background: linear-gradient(180deg, var(--night) 0%, var(--night-deep) 100%);
+        }
+
+        .comparison__table-wrap {
+            margin-top: 48px;
+            overflow-x: auto;
+            border-radius: 16px;
+            border: 1px solid rgba(200, 208, 232, 0.06);
+        }
+
+        .comparison__table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.92rem;
+        }
+
+        .comparison__table thead th {
+            padding: 20px 24px;
+            text-align: left;
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            background: rgba(15, 21, 53, 0.6);
+            border-bottom: 1px solid rgba(200, 208, 232, 0.06);
+        }
+
+        .comparison__table thead th:first-child {
+            color: var(--gold);
+        }
+
+        .comparison__table tbody td {
+            padding: 16px 24px;
+            border-bottom: 1px solid rgba(200, 208, 232, 0.04);
+            color: var(--text-secondary);
+            vertical-align: middle;
+        }
+
+        .comparison__table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .comparison__table tbody td:first-child {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .comparison__table .check {
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        .comparison__table .cross {
+            color: #b05050;
+            opacity: 0.7;
+        }
+
+        .comparison__table .highlight-col {
+            background: rgba(212, 168, 83, 0.04);
+        }
+
+        /* ========================================
+           SCIENTIST CREDIBILITY
+           ======================================== */
+        .scientist {
+            background: var(--night-deep);
+        }
+
+        .scientist__content {
+            display: flex;
+            align-items: center;
+            gap: 48px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .scientist__avatar {
+            flex-shrink: 0;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--night-mid) 0%, var(--night-soft) 100%);
+            border: 2px solid rgba(212, 168, 83, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-display);
+            font-size: 2.4rem;
+            color: var(--gold);
+        }
+
+        .scientist__text h3 {
+            margin-bottom: 6px;
+        }
+
+        .scientist__text .credential {
+            font-size: 0.85rem;
+            color: var(--gold);
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+
+        .scientist__text p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        /* ========================================
+           FAQ / OBJECTION HANDLING
+           ======================================== */
+        .faq {
+            background: linear-gradient(180deg, var(--night-deep) 0%, var(--night) 100%);
+        }
+
+        .faq__list {
+            max-width: 680px;
+            margin: 48px auto 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .faq__item {
+            border-bottom: 1px solid rgba(200, 208, 232, 0.06);
+        }
+
+        .faq__question {
+            width: 100%;
+            padding: 24px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            background: none;
+            border: none;
+            color: var(--cream);
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            font-weight: 500;
+            text-align: left;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .faq__question:hover {
+            color: var(--gold);
+        }
+
+        .faq__question svg {
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            stroke: var(--text-muted);
+            transition: transform 0.3s ease;
+        }
+
+        .faq__item.active .faq__question svg {
+            transform: rotate(45deg);
+        }
+
+        .faq__answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s ease;
+        }
+
+        .faq__item.active .faq__answer {
+            max-height: 300px;
+            padding-bottom: 24px;
+        }
+
+        .faq__answer p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 0;
+        }
+
+        /* ========================================
+           GUARANTEE
+           ======================================== */
+        .guarantee {
+            background: var(--night);
+        }
+
+        .guarantee__box {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 48px;
+            background: linear-gradient(135deg, rgba(212, 168, 83, 0.06) 0%, rgba(107, 66, 38, 0.08) 100%);
+            border: 1px solid rgba(212, 168, 83, 0.15);
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        .guarantee__icon {
+            font-size: 2.4rem;
+            margin-bottom: 20px;
+        }
+
+        .guarantee__box h3 {
+            margin-bottom: 16px;
+        }
+
+        .guarantee__box p {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            max-width: 480px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* ========================================
+           FINAL CTA
+           ======================================== */
+        .final-cta {
+            padding: var(--section-pad) 0 120px;
+            background: linear-gradient(180deg, var(--night) 0%, var(--night-deep) 50%, var(--night) 100%);
+            text-align: center;
+            position: relative;
+        }
+
+        .final-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            max-width: 400px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(212, 168, 83, 0.2), transparent);
+        }
+
+        .final-cta h2 {
+            margin-bottom: 20px;
+        }
+
+        .final-cta__sub {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 500px;
+            margin: 0 auto 48px;
+        }
+
+        .final-cta__bundle {
+            max-width: 480px;
+            margin: 0 auto 32px;
+            padding: 36px;
+            background: linear-gradient(135deg, rgba(212, 168, 83, 0.08) 0%, rgba(107, 66, 38, 0.06) 100%);
+            border: 1px solid rgba(212, 168, 83, 0.2);
+            border-radius: 16px;
+        }
+
+        .final-cta__bundle-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 8px;
+        }
+
+        .final-cta__bundle h3 {
+            font-size: 1.6rem;
+            margin-bottom: 4px;
+        }
+
+        .final-cta__bundle-price {
+            font-family: var(--font-display);
+            font-size: 2.2rem;
+            font-weight: 600;
+            color: var(--gold);
+            margin: 12px 0;
+        }
+
+        .final-cta__bundle-price s {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .final-cta__bundle-perks {
+            list-style: none;
+            margin: 16px 0 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .final-cta__bundle-perks li {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .final-cta__bundle-perks li svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--gold);
+            flex-shrink: 0;
+        }
+
+        .final-cta__single {
+            margin-top: 16px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .final-cta__single a {
+            color: var(--gold);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .final-cta__single a:hover {
+            color: var(--gold-soft);
+        }
+
+        /* ========================================
+           FOOTER MINIMAL
+           ======================================== */
+        .footer-minimal {
+            padding: 32px 0;
+            text-align: center;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            border-top: 1px solid rgba(200, 208, 232, 0.04);
+        }
+
+        /* ========================================
+           ANIMATIONS
+           ======================================== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(32px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-stagger > * {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .reveal-stagger.visible > * {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-stagger.visible > *:nth-child(1) { transition-delay: 0s; }
+        .reveal-stagger.visible > *:nth-child(2) { transition-delay: 0.1s; }
+        .reveal-stagger.visible > *:nth-child(3) { transition-delay: 0.2s; }
+        .reveal-stagger.visible > *:nth-child(4) { transition-delay: 0.3s; }
+
+        /* ========================================
+           RESPONSIVE
+           ======================================== */
+        @media (max-width: 768px) {
+            body {
+                font-size: 16px;
+            }
+
+            .failed__grid {
+                grid-template-columns: 1fr;
+            }
+
+            .ingredients-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .testimonials__grid {
+                grid-template-columns: 1fr;
+            }
+
+            .scientist__content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .proof-bar__inner {
+                gap: 24px;
+            }
+
+            .proof-bar__divider {
+                display: none;
+            }
+
+            .hero__trust {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .comparison__table {
+                font-size: 0.82rem;
+            }
+
+            .comparison__table thead th,
+            .comparison__table tbody td {
+                padding: 12px 14px;
+            }
+
+            .guarantee__box {
+                padding: 32px 24px;
+            }
+
+            .final-cta__bundle {
+                padding: 28px 20px;
+            }
+
+            .btn-primary {
+                padding: 16px 36px;
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .failed__grid {
+                gap: 16px;
+            }
+
+            .failed__card {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Grain texture overlay -->
+    <div class="grain-overlay" aria-hidden="true"></div>
+
+    <!-- Starfield -->
+    <div class="stars" id="stars" aria-hidden="true"></div>
+
+    <!-- ========================================
+         HERO
+         ======================================== -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero__badge">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                Melatonin-Free Formula
+            </div>
+
+            <h1>You Don't Have a Sleep Problem.<br>You Have a <em>3 AM Problem.</em></h1>
+
+            <p class="hero__sub">
+                Racing thoughts. Ceiling staring. The mental math of "if I fall asleep right now..." Deep Sleep Cocoa is the nightly ritual that helps your body remember how to stay asleep.
+            </p>
+
+            <div class="hero__cta-group">
+                <a href="#order" class="btn-primary">
+                    <span>Order the 3-Month Bundle &mdash; Save 25%</span>
+                </a>
+                <p class="hero__price"><s>$119</s> &nbsp; <strong style="color: var(--gold);">$89</strong> &nbsp; + Free Shipping</p>
+            </div>
+
+            <div class="hero__trust">
+                <div class="hero__trust-item">
+                    <div class="hero__stars">
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14 2 9.27l6.91-1.01z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14 2 9.27l6.91-1.01z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14 2 9.27l6.91-1.01z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14 2 9.27l6.91-1.01z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14 2 9.27l6.91-1.01z"/></svg>
+                    </div>
+                    10,000+ Reviews
+                </div>
+                <div class="hero__trust-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    30-Night Guarantee
+                </div>
+                <div class="hero__trust-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                    PhD Neuroscientist Formulated
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         SOCIAL PROOF BAR
+         ======================================== -->
+    <div class="proof-bar">
+        <div class="container container--full">
+            <div class="proof-bar__inner">
+                <div class="proof-bar__stat">
+                    <div class="proof-bar__number">10,247</div>
+                    <div class="proof-bar__label">5-Star Reviews</div>
+                </div>
+                <div class="proof-bar__divider"></div>
+                <div class="proof-bar__stat">
+                    <div class="proof-bar__number">93%</div>
+                    <div class="proof-bar__label">Report Better Sleep in 5 Nights</div>
+                </div>
+                <div class="proof-bar__divider"></div>
+                <div class="proof-bar__stat">
+                    <div class="proof-bar__number">0 mg</div>
+                    <div class="proof-bar__label">Melatonin</div>
+                </div>
+                <div class="proof-bar__divider"></div>
+                <div class="proof-bar__stat">
+                    <div class="proof-bar__number">47 min</div>
+                    <div class="proof-bar__label">Avg. Extra Sleep per Night</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================
+         PROBLEM SECTION
+         ======================================== -->
+    <section class="problem">
+        <div class="container reveal">
+            <span class="eyebrow">Sound Familiar?</span>
+
+            <p class="problem__lead">
+                You fall asleep fine. That's not the problem.
+            </p>
+
+            <p>
+                The problem is 3 AM. Your eyes snap open. Your mind is already running&mdash;replaying conversations, forecasting tomorrow's meetings, calculating how many hours of sleep you have left. (Which only makes it worse.)
+            </p>
+
+            <p>
+                You stare at the ceiling. You check your phone. You do the math: <em>"If I fall asleep right now, I'll get four hours."</em>
+            </p>
+
+            <p>
+                You don't fall asleep right now.
+            </p>
+
+            <p>
+                By morning, you're running on fumes. Two coffees to feel human. A fog that doesn't lift until noon. You push through the afternoon on willpower and cortisol, crash by 8 PM, and the whole cycle starts over.
+            </p>
+
+            <div class="problem__callout">
+                <p>
+                    "My brain won't shut off."<br>
+                    "I feel like a zombie until my second coffee."<br>
+                    "I'm burning the candle at both ends."
+                </p>
+            </div>
+
+            <p class="problem__closing">
+                This isn't a discipline problem. Your nervous system is stuck in overdrive&mdash;wired during the day, unable to fully power down at night.
+            </p>
+        </div>
+    </section>
+
+    <!-- ========================================
+         FAILED SOLUTIONS
+         ======================================== -->
+    <section class="failed">
+        <div class="container">
+            <div class="reveal" style="text-align: center;">
+                <span class="eyebrow">What You've Already Tried</span>
+                <h2>You've tried everything.<br><em style="color: var(--gold);">Almost.</em></h2>
+            </div>
+
+            <div class="failed__grid reveal-stagger">
+                <div class="failed__card">
+                    <div class="failed__card-icon">&#x1F48A;</div>
+                    <h4>Melatonin</h4>
+                    <p>Knocked you out, sure. But that morning hangover&mdash;the grogginess, the brain fog&mdash;was worse than the tiredness. Because melatonin is a hormone that forces sleep. It doesn't fix <em>why</em> you're waking up.</p>
+                    <span class="verdict">Treats symptom, not cause</span>
+                </div>
+                <div class="failed__card">
+                    <div class="failed__card-icon">&#x1F3E5;</div>
+                    <h4>Prescription Meds</h4>
+                    <p>You thought about it. Maybe you tried it. But the dependency warnings, the morning drowsiness, the stories about sleepwalking... You want to sleep, not add another problem to your list.</p>
+                    <span class="verdict">Risk outweighs reward</span>
+                </div>
+                <div class="failed__card">
+                    <div class="failed__card-icon">&#x1F9D8;</div>
+                    <h4>Meditation Apps</h4>
+                    <p>Ten minutes of "observe your thoughts" while your brain runs a corporate planning session. Some nights it helped. Most nights, you fell asleep to someone breathing and woke up at 3 AM anyway.</p>
+                    <span class="verdict">Inconsistent results</span>
+                </div>
+                <div class="failed__card">
+                    <div class="failed__card-icon">&#x2615;</div>
+                    <h4>Sleepy Teas</h4>
+                    <p>Brewing chamomile at 10 PM, waiting for it to cool, drinking enough to work but not so much you wake up for the bathroom. The ritual was more hassle than help.</p>
+                    <span class="verdict">Too much friction</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         SOLUTION INTRO
+         ======================================== -->
+    <section class="solution-intro">
+        <div class="container reveal">
+            <span class="eyebrow">Introducing Deep Sleep Cocoa</span>
+
+            <h2>What if the problem isn't that you can't sleep&mdash;it's that your body <em>forgot how?</em></h2>
+
+            <div class="solution-intro__body">
+                <p>
+                    Deep Sleep Cocoa isn't a sleep aid. It's a nightly ritual that helps your nervous system remember how to wind down.
+                </p>
+                <p>
+                    A warm cup of rich, dark cocoa&mdash;infused with three compounds that work <em>with</em> your body's natural sleep architecture, not against it.
+                </p>
+            </div>
+
+            <div class="solution-intro__pills">
+                <div class="solution-intro__pill">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                    Zero Melatonin
+                </div>
+                <div class="solution-intro__pill">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                    No Grogginess
+                </div>
+                <div class="solution-intro__pill">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                    Non-Habit Forming
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         HOW IT WORKS (INGREDIENTS)
+         ======================================== -->
+    <section class="how-it-works">
+        <div class="container container--full">
+            <div class="reveal" style="text-align: center;">
+                <span class="eyebrow">The Science</span>
+                <h2>Three Ingredients. One Ritual.<br>Seven Hours of Unbroken Sleep.</h2>
+            </div>
+
+            <div class="ingredients-grid reveal-stagger">
+                <div class="ingredient-card">
+                    <div class="ingredient-card__step">1</div>
+                    <h3>Calm the Noise</h3>
+                    <div class="ingredient-card__compound">Magnesium Glycinate</div>
+                    <p>Your body burns through magnesium under stress. Most high-performers are deficient and don't know it. Glycinate is the most bioavailable form&mdash;it crosses the blood-brain barrier to quiet racing thoughts at the source.</p>
+                </div>
+                <div class="ingredient-card">
+                    <div class="ingredient-card__step">2</div>
+                    <h3>Turn Down the Volume</h3>
+                    <div class="ingredient-card__compound">L-Theanine</div>
+                    <p>The same compound that makes green tea calming without making you drowsy. L-Theanine increases alpha brain waves&mdash;the pattern seen during meditation&mdash;shifting your mind from problem-solving mode to rest mode.</p>
+                </div>
+                <div class="ingredient-card">
+                    <div class="ingredient-card__step">3</div>
+                    <h3>Stay in Deep Sleep</h3>
+                    <div class="ingredient-card__compound">Reishi Mushroom</div>
+                    <p>Used for centuries in traditional medicine, Reishi supports your body's natural sleep cycles. Not by forcing you unconscious, but by helping you stay in deep, restorative sleep phases longer.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         THE RITUAL
+         ======================================== -->
+    <section class="ritual">
+        <div class="container">
+            <div class="reveal" style="text-align: center;">
+                <span class="eyebrow">The Nightly Ritual</span>
+                <h2>Replace the Wine.<br>Keep the Comfort.</h2>
+                <p style="max-width: 540px; margin: 16px auto 0; color: var(--text-secondary);">
+                    You know that glass of wine at 9 PM? The one that "takes the edge off" but fragments your sleep by 2 AM? Deep Sleep Cocoa is the replacement you've been looking for.
+                </p>
+            </div>
+
+            <div class="ritual__content reveal">
+                <div class="ritual__steps">
+                    <div class="ritual__step">
+                        <div class="ritual__step-num">1</div>
+                        <div class="ritual__step-text">
+                            <h4>Heat</h4>
+                            <p>Warm your milk of choice. Oat, almond, dairy&mdash;whatever you love.</p>
+                        </div>
+                    </div>
+                    <div class="ritual__step">
+                        <div class="ritual__step-num">2</div>
+                        <div class="ritual__step-text">
+                            <h4>Stir</h4>
+                            <p>One scoop of Deep Sleep Cocoa. Stir until the rich, dark chocolate dissolves.</p>
+                        </div>
+                    </div>
+                    <div class="ritual__step">
+                        <div class="ritual__step-num">3</div>
+                        <div class="ritual__step-text">
+                            <h4>Sit</h4>
+                            <p>Put the phone down. Hold the warmth. Breathe. This is your signal to your body: the day is done.</p>
+                        </div>
+                    </div>
+                    <div class="ritual__step">
+                        <div class="ritual__step-num">4</div>
+                        <div class="ritual__step-text">
+                            <h4>Sleep</h4>
+                            <p>Within 20 minutes, the tension leaves your shoulders. Your thoughts slow. Your eyelids get heavy&mdash;the real kind, not the forced kind. And then you sleep. Through the night.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ritual__sensory">
+                    <p>
+                        The warmth hits your hands first. Then the rich, dark chocolate flavor&mdash;not the chalky, supplement taste you're bracing for. This tastes like something you'd order at a caf&eacute;. The kind of thing you look forward to, not force down.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         TESTIMONIALS
+         ======================================== -->
+    <section class="testimonials">
+        <div class="container container--full">
+            <div class="reveal" style="text-align: center;">
+                <span class="eyebrow">Real Results</span>
+                <h2>10,247 Five-Star Reviews.<br>Here Are Three.</h2>
+            </div>
+
+            <div class="testimonials__grid reveal-stagger">
+                <div class="testimonial-card">
+                    <div class="testimonial-card__stars">
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14 2 9.27l6.91-1.01z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14 2 9.27l6.91-1.01z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14 2 9.27l6.91-1.01z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14 2 9.27l6.91-1.01z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14 2 9.27l6.91-1.01z"/></svg>
+                    </div>
+                    <p class="testimonial-card__quote">
+                        "I haven't seen 3 AM in 47 days. I used to dread bedtime because I knew I'd be wide awake in a few hours. Now my biggest problem is that my alarm feels too early&mdash;because I'm actually in deep sleep when it goes off."
+                    </p>
+                    <div class="testimonial-card__author">
+                        <span class="testimonial-card__name">Sarah K.</span> &middot; Marketing Director, 42
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="testimonial-card__stars">
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14 2 9.27l6.91-1.01z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14 2 9.27l6.91-1.01z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14 2 9.27l6.91-1.01z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14 2 9.27l6.91-1.01z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14 2 9.27l6.91-1.01z"/></svg>
+                    </div>
+                    <p class="testimonial-card__quote">
+                        "I was skeptical about another sleep supplement. But this isn't a supplement&mdash;it's the best part of my evening. My husband started stealing mine, so I ordered two bags. The chocolate flavor is genuinely good."
+                    </p>
+                    <div class="testimonial-card__author">
+                        <span class="testimonial-card__name">Rachel M.</span> &middot; Mother of 3, 38
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="testimonial-card__stars">
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14 2 9.27l6.91-1.01z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14 2 9.27l6.91-1.01z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14 2 9.27l6.91-1.01z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14 2 9.27l6.91-1.01z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14 2 9.27l6.91-1.01z"/></svg>
+                    </div>
+                    <p class="testimonial-card__quote">
+                        "I've tried everything from Ambien to melatonin to counting sheep. This is the first thing that helps me stay asleep without feeling drugged the next morning. I wake up before my alarm now. My wife says I'm a different person."
+                    </p>
+                    <div class="testimonial-card__author">
+                        <span class="testimonial-card__name">James T.</span> &middot; CFO, 51
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         COMPARISON TABLE
+         ======================================== -->
+    <section class="comparison">
+        <div class="container container--wide">
+            <div class="reveal" style="text-align: center;">
+                <span class="eyebrow">How It Compares</span>
+                <h2>Not All Sleep Solutions<br>Are Created Equal</h2>
+            </div>
+
+            <div class="comparison__table-wrap reveal">
+                <table class="comparison__table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th class="highlight-col">Deep Sleep Cocoa</th>
+                            <th>Melatonin</th>
+                            <th>Prescription Meds</th>
+                            <th>Sleepy Teas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Helps you stay asleep</td>
+                            <td class="highlight-col check">&#10003;</td>
+                            <td class="cross">&#10007;</td>
+                            <td class="check">&#10003;</td>
+                            <td class="cross">&#10007;</td>
+                        </tr>
+                        <tr>
+                            <td>No morning grogginess</td>
+                            <td class="highlight-col check">&#10003;</td>
+                            <td class="cross">&#10007;</td>
+                            <td class="cross">&#10007;</td>
+                            <td class="check">&#10003;</td>
+                        </tr>
+                        <tr>
+                            <td>Non-habit forming</td>
+                            <td class="highlight-col check">&#10003;</td>
+                            <td class="check">&#10003;</td>
+                            <td class="cross">&#10007;</td>
+                            <td class="check">&#10003;</td>
+                        </tr>
+                        <tr>
+                            <td>Supports natural sleep cycles</td>
+                            <td class="highlight-col check">&#10003;</td>
+                            <td class="cross">&#10007;</td>
+                            <td class="cross">&#10007;</td>
+                            <td class="cross">&#10007;</td>
+                        </tr>
+                        <tr>
+                            <td>Tastes good</td>
+                            <td class="highlight-col check">&#10003;</td>
+                            <td class="cross">&#10007;</td>
+                            <td class="cross">&#10007;</td>
+                            <td class="check">&#10003;</td>
+                        </tr>
+                        <tr>
+                            <td>No prescription needed</td>
+                            <td class="highlight-col check">&#10003;</td>
+                            <td class="check">&#10003;</td>
+                            <td class="cross">&#10007;</td>
+                            <td class="check">&#10003;</td>
+                        </tr>
+                        <tr>
+                            <td>Enjoyable nightly ritual</td>
+                            <td class="highlight-col check">&#10003;</td>
+                            <td class="cross">&#10007;</td>
+                            <td class="cross">&#10007;</td>
+                            <td class="check">&#10003;</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         SCIENTIST / CREDIBILITY
+         ======================================== -->
+    <section class="scientist">
+        <div class="container reveal">
+            <div class="scientist__content">
+                <div class="scientist__avatar">EV</div>
+                <div class="scientist__text">
+                    <h3>Dr. Elena Vasquez</h3>
+                    <p class="credential">PhD Neuroscience &middot; Sleep Architecture Researcher</p>
+                    <p>
+                        "Most sleep supplements knock you out with melatonin and call it a night. That's not sleep&mdash;that's sedation. I formulated Deep Sleep Cocoa to work with the body's own circadian signaling. Magnesium Glycinate calms the HPA axis. L-Theanine promotes alpha-wave activity. Reishi supports slow-wave sleep duration. The result: you wake up recovered, not groggy."
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         FAQ / OBJECTION HANDLING
+         ======================================== -->
+    <section class="faq">
+        <div class="container">
+            <div class="reveal" style="text-align: center;">
+                <span class="eyebrow">Common Questions</span>
+                <h2>You're Wondering...</h2>
+            </div>
+
+            <div class="faq__list reveal">
+                <div class="faq__item active">
+                    <button class="faq__question">
+                        "Is this just expensive melatonin?"
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </button>
+                    <div class="faq__answer">
+                        <p>No. Deep Sleep Cocoa contains zero melatonin. Melatonin is a hormone that tells your body <em>when</em> to sleep but doesn't improve sleep <em>quality</em>. Our formula uses Magnesium Glycinate, L-Theanine, and Reishi to support the mechanisms that keep you in deep, restorative sleep. Different problem, different solution.</p>
+                    </div>
+                </div>
+
+                <div class="faq__item">
+                    <button class="faq__question">
+                        "Will I feel groggy tomorrow morning?"
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </button>
+                    <div class="faq__answer">
+                        <p>The opposite. Because Deep Sleep Cocoa supports natural sleep architecture rather than sedating you, most customers report waking up with more mental clarity than they've felt in years. No hangover. No alarm-clock dread. Just clear, calm energy from the moment your feet hit the floor.</p>
+                    </div>
+                </div>
+
+                <div class="faq__item">
+                    <button class="faq__question">
+                        "Does it actually taste good?"
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </button>
+                    <div class="faq__answer">
+                        <p>Taste is the number-one thing customers mention in reviews. This isn't a chalky powder you force down. It's a rich, dark hot chocolate that people genuinely look forward to. Many customers say it's replaced their dessert habit, not just their sleep supplement.</p>
+                    </div>
+                </div>
+
+                <div class="faq__item">
+                    <button class="faq__question">
+                        "How long until it works?"
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </button>
+                    <div class="faq__answer">
+                        <p>Most customers report noticeable improvement within the first 3&ndash;5 nights. Full benefits&mdash;including deeper sleep phases and more consistent energy&mdash;tend to build over 2&ndash;3 weeks as your magnesium levels restore. That's why we recommend the 3-month bundle: it gives your body time to fully recalibrate.</p>
+                    </div>
+                </div>
+
+                <div class="faq__item">
+                    <button class="faq__question">
+                        "Is it safe to take every night?"
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </button>
+                    <div class="faq__answer">
+                        <p>Yes. Every ingredient is naturally occurring and non-habit forming. There's no sedative component, so there's no dependency risk. Magnesium is a mineral your body needs daily. L-Theanine is found in green tea. Reishi is a food-grade mushroom used for centuries. Consult your doctor if you're pregnant, nursing, or on medication.</p>
+                    </div>
+                </div>
+
+                <div class="faq__item">
+                    <button class="faq__question">
+                        "What if it doesn't work for me?"
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </button>
+                    <div class="faq__answer">
+                        <p>We have a 30-Night Money-Back Guarantee with an empty bag policy. Use the entire bag. If you don't sleep better, email us and we'll refund every cent. No forms. No return shipping. We can offer this because 93% of customers reorder.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         GUARANTEE
+         ======================================== -->
+    <section class="guarantee">
+        <div class="container reveal">
+            <div class="guarantee__box">
+                <div class="guarantee__icon">&#x1F6E1;&#xFE0F;</div>
+                <h3>The Empty Bag Guarantee</h3>
+                <p>
+                    Use the entire bag over 30 nights. If you don't wake up feeling more rested, more focused, and more like yourself&mdash;email us. We'll refund every cent. No return shipping. No hoops. We can make this promise because 93% of customers come back for more.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         FINAL CTA
+         ======================================== -->
+    <section class="final-cta" id="order">
+        <div class="container reveal">
+            <span class="eyebrow">Tonight Could Be Different</span>
+            <h2>Stop Staring at the Ceiling.<br>Start Sleeping Through the Night.</h2>
+            <p class="final-cta__sub">
+                Join 10,247 people who turned their 3 AM wake-ups into 7 hours of deep, unbroken sleep.
+            </p>
+
+            <div class="final-cta__bundle">
+                <div class="final-cta__bundle-label">Most Popular &mdash; Save 25%</div>
+                <h3>The 3-Month Bundle</h3>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0;">90 nights of deep, restorative sleep</p>
+                <div class="final-cta__bundle-price">
+                    $89 &nbsp;<s>$119</s>
+                </div>
+                <ul class="final-cta__bundle-perks">
+                    <li>
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                        Free shipping
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                        30-night money-back guarantee
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                        PhD Neuroscientist formulated
+                    </li>
+                </ul>
+                <a href="#" class="btn-primary" style="width: 100%;">
+                    <span>Order the 3-Month Bundle</span>
+                </a>
+            </div>
+
+            <p class="final-cta__single">
+                Not ready for 3 months? <a href="#">Try a single bag for $39</a>
+            </p>
+        </div>
+    </section>
+
+    <!-- ========================================
+         FOOTER
+         ======================================== -->
+    <footer class="footer-minimal">
+        <div class="container">
+            &copy; 2026 LunaSol Health &amp; Wellness. All rights reserved.<br>
+            These statements have not been evaluated by the FDA. This product is not intended to diagnose, treat, cure, or prevent any disease.
+        </div>
+    </footer>
+
+    <!-- ========================================
+         JAVASCRIPT
+         ======================================== -->
+    <script>
+        // Stars background
+        (function() {
+            const starsEl = document.getElementById('stars');
+            const count = 60;
+            for (let i = 0; i < count; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star-dot');
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 4 + 's';
+                star.style.animationDuration = (3 + Math.random() * 3) + 's';
+                if (Math.random() > 0.7) {
+                    star.style.width = '3px';
+                    star.style.height = '3px';
+                }
+                starsEl.appendChild(star);
+            }
+        })();
+
+        // Scroll reveal
+        (function() {
+            const reveals = document.querySelectorAll('.reveal, .reveal-stagger');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.15,
+                rootMargin: '0px 0px -40px 0px'
+            });
+
+            reveals.forEach(el => observer.observe(el));
+        })();
+
+        // FAQ Accordion
+        (function() {
+            const items = document.querySelectorAll('.faq__item');
+            items.forEach(item => {
+                const btn = item.querySelector('.faq__question');
+                btn.addEventListener('click', () => {
+                    const isActive = item.classList.contains('active');
+                    items.forEach(i => i.classList.remove('active'));
+                    if (!isActive) {
+                        item.classList.add('active');
+                    }
+                });
+            });
+        })();
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                const target = document.querySelector(link.getAttribute('href'));
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
